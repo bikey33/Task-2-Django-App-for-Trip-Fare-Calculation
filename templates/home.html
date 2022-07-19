@@ -1,0 +1,36 @@
+<!--  This is the Home File that specifies the home
+template.
+And i prepared the form to enter the data like time of day and
+Kilometer travelled.
+The calculated information will be echoed as label in the same template-->
+{% extends 'base.html' %}
+{% block content %}
+    <h2> Welcome to Car Charge Calculator</h2>
+    <br/>
+      <class='container'>
+     <br/>
+         <form method="post" action = "/fareapp/home/">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><h6>Time of Day in 12 hr format (HH:MM)</h6></label>
+              <input type="text" class="form-control" id="timein" placeholder="HH:MM e.g. 12:30" name = "time">
+            </div>
+             <div class="input-group mb-3">
+                  <label class="input-group-text" for="inputGroupSelect01">AM or PM</label>
+                  <select class="form-select" id="inputGroupSelect01" name="select">
+                    <option selected>Choose the Time of Day...</option>
+                    <option value="1">AM</option>
+                    <option value="2">PM</option>
+
+                  </select>
+</div>
+            <div class="mb-3">
+                <label for="exampleFormControlInput1" class="form-label"><h6>Distance Covered</h6></label>
+                <input type="text" class="form-control" id="inputdistance" placeholder="Distance Travelled in KM" name ="distance">
+            </div>
+       <button type="submit" class="btn btn-primary">Calculate</button>
+      </div>
+    </form>
+    </div>
+
+{% endblock %}

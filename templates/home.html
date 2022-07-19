@@ -7,13 +7,24 @@ The calculated information will be echoed as label in the same template-->
 {% block content %}
     <h2> Welcome to Car Charge Calculator</h2>
     <br/>
-      <class='container'>
+      <div class='container'>
      <br/>
-         <form method="post" action = "/fareapp/home/">
+         {% if error_message %}
+          <div class="alert alert-danger d-flex align-items-center" role="alert">
+  <svg class="bi flex-shrink-0 me-2" width="24" height="24" role="img" aria-label="Danger:"><use xlink:href="#exclamation-triangle-fill"/></svg>
+  <div>
+    {{ error_message }}
+  </div> <br/>
+</div>
+          {% endif %}
+         <form method="post" action = "" class="needs-validation" novalidate id="forms">
             {% csrf_token %}
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label"><h6>Time of Day in 12 hr format (HH:MM)</h6></label>
               <input type="text" class="form-control" id="timein" placeholder="HH:MM e.g. 12:30" name = "time">
+            <div class="invalid-feedback">
+                Please enter Valid time in required format
+            </div>
             </div>
              <div class="input-group mb-3">
                   <label class="input-group-text" for="inputGroupSelect01">AM or PM</label>
@@ -23,14 +34,64 @@ The calculated information will be echoed as label in the same template-->
                     <option value="2">PM</option>
 
                   </select>
+                 <div class="invalid-feedback">
+                Please Select AM or PM
+            </div>
 </div>
             <div class="mb-3">
                 <label for="exampleFormControlInput1" class="form-label"><h6>Distance Covered</h6></label>
                 <input type="text" class="form-control" id="inputdistance" placeholder="Distance Travelled in KM" name ="distance">
+                <div class="invalid-feedback">
+                Please enter Valid distance
+            </div>
             </div>
        <button type="submit" class="btn btn-primary">Calculate</button>
       </div>
     </form>
+    </br>
+    {% if total %}
+        <h6>
+        For entered distance of {{ distance }} Km at {{ time }}
+             {{ am }}
+        </h6>
+
+        <table class="table">
+  <thead>
+    <tr class="table-primary">
+      <th scope="col"></th>
+      <th scope="col">Initial Charge</th>
+      <th scope="col">Service Charge</th>
+      <th scope="col"> Distance Charge</th>
+        <th scope="col">Surge Charge</th>
+
+    </tr>
+  </thead>
+  <tbody>
+    <tr class="table-light">
+      <th scope="row">Rates</th>
+      <td>{{ initial_fare }}</td>
+      <td>{{ service_charge }}</td>
+      <td>{{ km_rate }}</td>
+        <td>{{ surge_rate }}</td>
+    </tr>
+    <tr class="table-danger">
+      <th scope="row">Inccured Charges</th>
+      <td>{{initial_fare}}</td>
+      <td>{{ service_incurr }}</td>
+      <td>{{ distance_fare }}</td>
+        <td>{{ surge_incurr }}</td>
+    </tr>
+  </tbody>
+</table>
+        <br/>
+        <div class="alert alert-info" role="alert">
+        Total fare for your trip is : <b>Rs. {{ total }}</b>
+        </div>
+    <br/>
+        <a href = {% url 'home' %}> <button type="button" class="btn btn-success">Back</button> </a>
+</div>
+    {% endif %}
+    </div>
     </div>
 
 {% endblock %}

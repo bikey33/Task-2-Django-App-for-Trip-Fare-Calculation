@@ -19,4 +19,5 @@ from django.urls import path, include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fareapp/',include('fareapp.urls')),
+    # Route urls with '127.0.0.1:8000/fareapp/home/' to home path of fareapp's urls
 ]

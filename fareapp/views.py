@@ -7,10 +7,11 @@ from .models import Faredata
 def home(request):
     context = {}
     error_message = None
-    if request.method == "POST":
+    if request.method == "POST": # Checking if the method is post or not
         t = request.POST['time']
         am_or_pm = request.POST['select']
         distance = request.POST['distance']
+
         # Validating if each field has valid data or not
         # Validating whether each field is empty or not
         if (not t):
@@ -43,11 +44,10 @@ def home(request):
         if not am_or_pm:
             error_message = "Please Select either AM or PM"
 
-
-
         # Read Data  for fare calculation  from database
         if not error_message:
             try:
+                # Fetching Data of fare rates from database
                 data = Faredata.objects.get(time=time_24)
                 Initial_rate = data.initial_fare
                 km_rate = data.km_rate
@@ -55,6 +55,7 @@ def home(request):
                 service_charge = data.service_charge
                 print(km_rate)
                 distance_fare = dist_float* km_rate
+
                 # Calculating Fares both variable and fixed
                 trip_fare = Initial_rate + dist_float* km_rate
                 service_inccur = (trip_fare*service_charge/100)
@@ -65,8 +66,13 @@ def home(request):
                 print("Total fare inaccured is:",total_fare)
                 # If Post request is made by submitting all the information
                 print("Time:", time_24,'Time of Day:',am_or_pm, 'Distance:', distance)
+
+                # Adding percentage sign for the surge and service rates represented in Percentage
+                surge_pct = str(surge_rate)+ "%"
+                service_pct = str(service_charge) + "%"
+
                 # Bundle all the fare data to be shown on the table and show total table in a dictionary
-                context = {'total':total_fare, 'km_rate':km_rate,'surge_rate':surge_rate,'service_charge':service_charge,'initial_fare': Initial_rate,'distance_fare': distance_fare,'service_incurr':service_inccur,'surge_incurr':surge_inccur,'error_message':error_message,'time': t,'am':am,'distance':distance}
+                context = {'total':total_fare, 'km_rate':km_rate,'surge_rate':surge_pct,'service_charge':service_pct,'initial_fare': Initial_rate,'distance_fare': distance_fare,'service_incurr':service_inccur,'surge_incurr':surge_inccur,'error_message':error_message,'time': t,'am':am,'distance':distance}
                 # Pass context to HTML template side
                 return render(request, 'home.html', context)
 
